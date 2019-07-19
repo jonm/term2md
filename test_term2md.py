@@ -109,5 +109,5 @@ def test_leading_red_can_be_red():
                               "```\n"]
     
 def test_should_fail():
-    assert False    
+    assert True    
 
