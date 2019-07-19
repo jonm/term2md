@@ -46,4 +46,4 @@ jobs:
     trigger: true
     version: every
   - task: pytest
-    file: source/ci/task_pytest.yml
+    file: source/ci/task_test.yml
