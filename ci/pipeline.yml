@@ -29,7 +29,6 @@ jobs:
       path: pr
       status: PENDING
   - task: pytest
-    image: jonm33/python3-ci
     file: pr/ci/task_pytest.yml
     input_mapping: { source: pr }
     on_failure:
