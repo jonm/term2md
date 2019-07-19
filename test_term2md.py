@@ -108,5 +108,6 @@ def test_leading_red_can_be_red():
                               "-   plain\n",
                               "```\n"]
     
-    
+def test_should_fail():
+    assert False    
 
