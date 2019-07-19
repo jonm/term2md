@@ -46,5 +46,4 @@ jobs:
     trigger: true
     version: every
   - task: pytest
-    image: jonm33/python3-ci
     file: source/ci/task_pytest.yml
