@@ -2,7 +2,7 @@
 
 import pytest
 
-from term2md import *
+from term2md.term2md import *
 
 def test_empty():
     assert convert([]) == []

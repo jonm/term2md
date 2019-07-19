@@ -9,4 +9,9 @@ image_resource:
 inputs:
 - name: source
 run:
-  path: pytest
+  dir: source
+  path: python3
+  args:
+  - setup.py
+  - test
+
