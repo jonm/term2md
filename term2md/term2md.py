@@ -53,7 +53,7 @@ def convert(lines):
             line = line.replace("\n","")
         
         out_parts = []
-        parts = re.split("(\x1b\[[0-9]*m)", line)
+        parts = re.split("(\x1b\\[[0-9]*m)", line)
         line_modes = modes_in_line(parts, mode)
 
         if (list(line_modes.keys()) == [] and mode in (RED, GREEN)
