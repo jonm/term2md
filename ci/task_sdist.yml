@@ -17,7 +17,7 @@ run:
   path: python3
   args:
   - setup.py
+  - sdist
   - --dist-dir
   - ../dist
-  - sdist
 
