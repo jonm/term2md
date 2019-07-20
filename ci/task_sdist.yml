@@ -1,0 +1,23 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: jonm33/python3-ci
+
+inputs:
+- name: source
+
+outputs:
+- name: dist
+  
+run:
+  dir: source
+  path: python3
+  args:
+  - setup.py
+  - --dist-dir
+  - ../dist
+  - sdist
+
