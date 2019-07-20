@@ -8,10 +8,15 @@ image_resource:
 
 inputs:
 - name: source
+
+outputs:
+- name: dist
+  
 run:
   dir: source
-  path: python3
+  path: /bin/sh
   args:
-  - setup.py
-  - test
-
+  - -c
+  - |
+    python3 setup.py test &&
+    python3 setup.py sdist --dist-dir ../dist
