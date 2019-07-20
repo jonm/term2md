@@ -19,5 +19,5 @@ run:
   - -c
   - |
     python3 setup.py test &&
-    python3 setup.py sdist --dist-dir ../dist &&
+    python3 setup.py sdist --dist-dir ../dist
 

@@ -22,7 +22,7 @@
 
 from setuptools import setup, find_packages
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 def read(filename):
     with open(filename) as f:
@@ -33,7 +33,7 @@ setup(
     version = __version__,
     description = 'convert ANSI terminal control characters to Markdown',
     long_description = read('README.md'),
-    long_description_type="text/markdown",
+    long_description_content_type="text/markdown",
     author = 'Jon Moore',
     url = 'https://github.com/jonm/term2md',
     packages = find_packages(),
