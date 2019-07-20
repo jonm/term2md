@@ -28,9 +28,13 @@ jobs:
     params:
       path: pr
       status: PENDING
-  - task: test
-    file: pr/ci/task_test.yml
-    input_mapping: { source: pr }
+  - do:
+    - task: test
+      file: pr/ci/task_test.yml
+      input_mapping: { source: pr }
+    - task: sdist
+      file: pr/ci/task_sdist.yml
+      input_mapping: { source: pr }
     on_failure:
       put: pr
       params:
