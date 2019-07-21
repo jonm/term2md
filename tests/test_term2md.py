@@ -129,6 +129,7 @@ def test_leading_red_can_be_red():
     assert convert(input) == ["```diff\n",
                               "-   plain\n",
                               "```\n"]
-    
-    
+
+def test_strip_unsupported_sequences():
+    assert convert(["\x1b[90mstuff\n"]) == ["stuff\n"]
 

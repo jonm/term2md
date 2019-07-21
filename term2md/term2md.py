@@ -30,18 +30,21 @@ BOLD = "\x1b[1m"
 RED = "\x1b[31m"
 GREEN = "\x1b[32m"
 
+def _is_control(part):
+    return re.match("^\x1b\\[[0-9]*m$", part) is not None
+
 def _modes_in_line(parts, in_mode):
     modes = {}
     cur_mode = in_mode
     for part in parts:
-        if part in (RESET, BOLD, RED, GREEN):
+        if _is_control(part):
             cur_mode = part
         elif part.strip() != "":
             modes[cur_mode] = True
     return modes
 
 def _non_control(parts):
-    return filter(lambda p: p not in (RESET, BOLD, RED, GREEN), parts)
+    return filter(lambda p: not _is_control(p), parts)
 
 def _leading(parts, in_mode, rg):
     modes = _modes_in_line(parts, in_mode)
@@ -130,6 +133,7 @@ def convert_f(f):
         
         if mode == BOLD:
             out_parts.append("**")
+
         for part in parts:
             if part in (RESET, BOLD, RED, GREEN):
                 if (mode, part) == (RESET, BOLD):
@@ -139,7 +143,9 @@ def convert_f(f):
                 mode = part
                 continue
 
-            out_parts.append(part)
+            if not _is_control(part):
+                out_parts.append(part)
+                
         if mode == BOLD:
             out_parts.append("**")
         out_parts.append('\n')
