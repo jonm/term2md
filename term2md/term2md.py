@@ -37,7 +37,7 @@ def _modes_in_line(parts, in_mode):
     modes = {}
     cur_mode = in_mode
     for part in parts:
-        if _is_control(part):
+        if part in (RESET, BOLD, RED, GREEN):
             cur_mode = part
         elif part.strip() != "":
             modes[cur_mode] = True
@@ -47,27 +47,13 @@ def _non_control(parts):
     return filter(lambda p: not _is_control(p), parts)
 
 def _leading(parts, in_mode, rg):
-    modes = _modes_in_line(parts, in_mode)
-    if len(modes) != 2 or rg not in modes or RESET not in modes:
-        return False
-
     cur_mode = in_mode
     state = None
     for part in parts:
-        if part in (rg, RESET):
+        if _is_control(part):
             cur_mode = part
         elif part.strip() != "":
-            if state == None and cur_mode == rg:
-                state = rg
-            elif state == rg and cur_mode == rg:
-                pass
-            elif state == rg and cur_mode == RESET:
-                state = RESET
-            elif state == RESET and cur_mode == RESET:
-                pass
-            else:
-                return False
-    return True
+            return cur_mode == rg
 
 def convert_f(f):
     mode = RESET
