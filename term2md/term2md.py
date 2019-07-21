@@ -66,11 +66,10 @@ def _leading(parts, in_mode, rg):
                 return False
     return True
 
-def convert(lines):
-    out = []
+def convert_f(f):
     mode = RESET
     in_diff = False
-    for line in lines:
+    for line in f:
         if line.endswith('\n'):
             line = line.replace("\n","")
         
@@ -86,12 +85,12 @@ def convert(lines):
                 out_parts.append("+")
             out_parts.append(''.join(_non_control(parts)))
             out_parts.append("\n")
-            out.append(''.join(out_parts))
+            yield ''.join(out_parts)
             continue
         
         if list(line_modes.keys()) == [GREEN] or _leading(parts, mode, GREEN):
             if not in_diff:
-                out.append("```diff\n")
+                yield "```diff\n"
                 in_diff = True
             out_parts.append("+")
 
@@ -104,12 +103,12 @@ def convert(lines):
                 if part in (RESET, BOLD, RED, GREEN):
                     mode = part
             out_parts.append('\n')
-            out.append(''.join(out_parts))
+            yield ''.join(out_parts)
             continue
 
         if list(line_modes.keys()) == [RED] or _leading(parts, mode, RED):
             if not in_diff:
-                out.append("```diff\n")
+                yield "```diff\n"
                 in_diff = True
             out_parts.append("-")
  
@@ -122,11 +121,11 @@ def convert(lines):
                 if part in (RESET, BOLD, RED, GREEN):
                     mode = part
             out_parts.append('\n')
-            out.append(''.join(out_parts))
+            yield ''.join(out_parts)
             continue
 
         if in_diff:
-            out.append("```\n")
+            yield "```\n"
             in_diff = False
         
         if mode == BOLD:
@@ -144,17 +143,20 @@ def convert(lines):
         if mode == BOLD:
             out_parts.append("**")
         out_parts.append('\n')
-        out.append(''.join(out_parts))
+        yield ''.join(out_parts)
 
     if in_diff:
-        out.append("```\n")
-        
+        yield "```\n"
+
+def convert(lines):
+    out = []
+    for line in convert_f(lines):
+        out.append(line)
     return out
 
 def main():
-    lines = sys.stdin.readlines()
-    out_lines = convert(lines)
-    for ol in out_lines: sys.stdout.write(ol)
+    for line in convert_f(sys.stdin):
+        sys.stdout.write(line)
 
 if __name__ == "__main__":
     main()
