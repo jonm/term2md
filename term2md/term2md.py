@@ -55,6 +55,31 @@ def _leading(parts, in_mode, rg):
         elif part.strip() != "":
             return cur_mode == rg
 
+def compress_bold(out_parts):
+    out = []
+    i = 0
+    bold = False
+    while i < len(out_parts):
+        if out_parts[i] == "**" and bold:
+            j = i + 1
+            while (j < len(out_parts) and out_parts[j] != "**"
+                   and out_parts[j].strip() == ""):
+                j += 1
+            if j < len(out_parts) and out_parts[j] == "**":
+                k = i + 1
+                while k < j:
+                    out.append(out_parts[k])
+                    k += 1
+                i = j + 1
+                continue
+            bold = False
+        elif out_parts[i] == "**":
+            bold = True
+
+        out.append(out_parts[i])
+        i += 1
+    return out
+        
 def convert_f(f):
     mode = RESET
     in_diff = False
@@ -116,24 +141,30 @@ def convert_f(f):
         if in_diff:
             yield "```\n"
             in_diff = False
-        
-        if mode == BOLD:
-            out_parts.append("**")
 
         for part in parts:
             if part in (RESET, BOLD, RED, GREEN):
-                if (mode, part) == (RESET, BOLD):
-                    out_parts.append("**")
-                elif (mode, part) == (BOLD, RESET):
-                    out_parts.append("**")
                 mode = part
                 continue
 
-            if not _is_control(part):
+            if _is_control(part): continue
+
+            stripped = part.strip()
+            if stripped != part and mode == BOLD:
+                out_parts.append(part[:part.find(stripped)])
+                out_parts.append("**")
+                out_parts.append(stripped)
+                out_parts.append("**")
+                out_parts.append(part[part.find(stripped)+len(stripped):])
+            elif mode == BOLD:
+                out_parts.append("**")
                 out_parts.append(part)
+                out_parts.append("**")
+            else:
+                out_parts.append(part)    
+
+        out_parts = compress_bold(out_parts)
                 
-        if mode == BOLD:
-            out_parts.append("**")
         out_parts.append('\n')
         yield ''.join(out_parts)
 

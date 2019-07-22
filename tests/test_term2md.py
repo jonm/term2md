@@ -133,3 +133,17 @@ def test_leading_red_can_be_red():
 def test_strip_unsupported_sequences():
     assert convert(["\x1b[90mstuff\n"]) == ["stuff\n"]
 
+def test_correctly_print_bold_leading_whitespace():
+    assert convert(["\x1b[1m foo\n"]) == [" **foo**\n"]
+
+def test_compress_no_bold():
+    assert compress_bold(["foo"]) == ["foo"]
+
+def test_compress_sequential_bold():
+    assert compress_bold(["**","foo","**","**"," bar","**"]) == \
+        ["**","foo"," bar","**"]
+
+def test_compress_bold_across_whitespace():
+    assert compress_bold(["**","foo","**"," ","**","bar","**"]) == \
+        ["**","foo"," ","bar","**"]
+    
