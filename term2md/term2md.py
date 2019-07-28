@@ -55,6 +55,12 @@ def _leading(parts, in_mode, rg):
         elif part.strip() != "":
             return cur_mode == rg
 
+def _final_mode(parts, in_mode):
+    out = in_mode
+    for part in parts:
+        if _is_control(part): out = part
+    return out
+        
 def compress_bold(out_parts):
     out = []
     i = 0
@@ -142,10 +148,10 @@ def convert_f(f):
             yield "```\n"
             in_diff = False
 
+        in_mode = mode
         for part in parts:
-            if part in (RESET, BOLD, RED, GREEN):
+            if part in (RESET, BOLD):
                 mode = part
-                continue
 
             if _is_control(part): continue
 
@@ -161,7 +167,9 @@ def convert_f(f):
                 out_parts.append(part)
                 out_parts.append("**")
             else:
-                out_parts.append(part)    
+                out_parts.append(part)
+
+        mode = _final_mode(parts, in_mode)
 
         out_parts = compress_bold(out_parts)
                 

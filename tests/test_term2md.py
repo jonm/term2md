@@ -147,3 +147,12 @@ def test_compress_bold_across_whitespace():
     assert compress_bold(["**","foo","**"," ","**","bar","**"]) == \
         ["**","foo"," ","bar","**"]
     
+def test_handle_red_on_nonleading_line():
+    input = ["regular then \x1b[31mred\x1b[0m\n"]
+    assert convert(input) == ["regular then red\n"]
+
+def test_handle_bold_red_on_nonleading_line():
+    input = ["regular then \x1b[1m\x1b[31mred\x1b[0m\x1b[0m\n"]
+    assert convert(input) == ["regular then **red**\n"]
+
+    
