@@ -84,6 +84,8 @@ def compress_bold(out_parts):
 
         out.append(out_parts[i])
         i += 1
+    if out == ["**","**"]:
+        return []
     return out
         
 def convert_f(f):
@@ -156,18 +158,19 @@ def convert_f(f):
             if _is_control(part): continue
 
             stripped = part.strip()
-            if stripped != part and mode == BOLD:
-                out_parts.append(part[:part.find(stripped)])
-                out_parts.append("**")
-                out_parts.append(stripped)
-                out_parts.append("**")
-                out_parts.append(part[part.find(stripped)+len(stripped):])
-            elif mode == BOLD:
-                out_parts.append("**")
-                out_parts.append(part)
-                out_parts.append("**")
-            else:
-                out_parts.append(part)
+            if stripped != '':
+                if stripped != part and mode == BOLD:
+                    out_parts.append(part[:part.find(stripped)])
+                    out_parts.append("**")
+                    out_parts.append(stripped)
+                    out_parts.append("**")
+                    out_parts.append(part[part.find(stripped)+len(stripped):])
+                elif mode == BOLD:
+                    out_parts.append("**")
+                    out_parts.append(part)
+                    out_parts.append("**")
+                else:
+                    out_parts.append(part)
 
         mode = _final_mode(parts, in_mode)
 
